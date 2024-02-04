@@ -11,8 +11,10 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.androidmvp.databinding.ActivityMainBinding
+import com.example.androidmvp.model.User
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), LoginInterface {
+    private lateinit var loginPresenter: LoginPresenter
 
     private lateinit var edtEmail: EditText
     private lateinit var edtPassword: EditText
@@ -25,23 +27,38 @@ class MainActivity : AppCompatActivity() {
 
         setView()
         setEvent()
+        setData()
 
     }
 
-    private fun login() {
-
-    }
-
-    private fun setEvent() {
+    override fun setEvent() {
         btnLogin.setOnClickListener {
             login()
         }
     }
 
-    private fun setView() {
+    override fun setView() {
         edtEmail = findViewById(R.id.edtEmail)
         edtPassword = findViewById(R.id.edtPassword)
         tvMessage = findViewById(R.id.tvMessage)
         btnLogin = findViewById(R.id.btnLogin)
+    }
+
+    override fun setData() {
+        loginPresenter = LoginPresenter(this)
+    }
+
+    private fun login() {
+        val email = edtEmail.text.toString()
+        val password = edtPassword.text.toString()
+        val user = User(email, password)
+        loginPresenter.login(user)
+    }
+    override fun loginSuccess() {
+        tvMessage.text = "Login successfully"
+    }
+
+    override fun loginError() {
+        tvMessage.text = "Login error"
     }
 }
